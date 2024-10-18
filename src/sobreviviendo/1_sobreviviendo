@@ -1,0 +1,163 @@
+
+package sobreviviendo;
+
+import javax.swing.JOptionPane;
+import javax.swing.*; 
+import java.util.Random;
+
+public class Sobreviviendo {
+
+
+
+
+    public static void main(String[] args) {
+  
+
+
+
+   
+        // Mensaje de bienvenida e introducción a la historia
+        JOptionPane.showMessageDialog(null, 
+            "¡Bienvenido a la aventura de sobrevivir al Torbellino!\n" +
+            "Hace años, un gran torbellino devastador aparecía en una región remota.\n" +
+            "Eres uno de los pocos afortunado
+s en encontrar refugio en un lugar seguro.\n" +
+            "Tu objetivo es seleccionar el mejor refugio, recolectar suministros esenciales, y asegurarte de que estés preparado para enfrentar el torbellino.\n" +
+            "Prepárate, porque tu vida está en juego.");
+
+        // Inicio de la historia del personaje
+        JOptionPane.showMessageDialog(null, 
+            "Comienzas en una pequeña aldea que ha sido azotada por una tormenta. El cielo está oscuro y amenazante.\n" +
+            "Sientes el viento cada vez más fuerte y el suelo temblar bajo tus pies. La gente corre en todas direcciones, tratando de encontrar un refugio.\n" +
+            "Con el corazón acelerado, te das cuenta de que necesitas encontrar un lugar seguro rápidamente.");
+
+        // Selección de refugio
+        String[] opcionesRefugio = {
+            "Subterraneo",
+            "En las Montañas",
+            "En el Bosque"
+        };
+
+        int eleccionRefugio = JOptionPane.showOptionDialog(null, 
+            "En medio del caos, encuentras tres posibles refugios. Debes decidir rápidamente dónde ir.",
+            "Selecciona tu refugio",
+            JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcionesRefugio, opcionesRefugio[0]);
+
+        String refugioUsuario = opcionesRefugio[eleccionRefugio];
+
+        // Historia según el refugio seleccionado
+        String mensajeRefugio = "Has elegido el refugio: " + refugioUsuario + "\n";
+        switch (refugioUsuario) {
+            case "Subterraneo":
+                mensajeRefugio += "Desciendes a un refugio subterráneo. La entrada es estrecha, pero una vez dentro, el ambiente es relativamente tranquilo.";
+                break;
+            case "En las Montañas":
+                mensajeRefugio += "Te diriges hacia las montañas. El aire es frío y cortante, y el camino se vuelve cada vez más escarpado.";
+                break;
+            case "En el Bosque":
+                mensajeRefugio += "Te adentras en el bosque, donde los árboles altos ofrecen algo de refugio del viento.";
+                break;
+        }
+        JOptionPane.showMessageDialog(null, mensajeRefugio);
+
+        // Determina los suministros clave según el refugio
+        String suministroClave;
+        switch (refugioUsuario) {
+            case "Subterraneo":
+                suministroClave = "Filtro de agua";
+                break;
+            case "En las Montañas":
+                suministroClave = "Manta térmica";
+                break;
+            case "En el Bosque":
+                suministroClave = "Cobija";
+                break;
+            default:
+                suministroClave = "";
+                break;
+        }
+
+        // Recolectar suministros
+        String[] suministrosDisponibles = {
+            "Filtro de agua", "Manta térmica", "Cobija", "Linterna", "Radio",
+            "Encendedor", "Comida Enlatada", "Botiquín Básico", "Kit de Primeros Auxilios", "Herramientas"
+        };
+
+        String[] inventarioUsuario = new String[5];
+        int inventarioCount = 0;
+
+        while (inventarioCount < 5) {
+            StringBuilder opciones = new StringBuilder("Elige un suministro (1-10) o 0 para terminar:\n");
+            for (int i = 0; i < suministrosDisponibles.length; i++) {
+                opciones.append(i + 1).append(". ").append(suministrosDisponibles[i]).append("\n");
+            }
+            opciones.append("0. Terminar");
+
+            String entrada = JOptionPane.showInputDialog(opciones.toString());
+            int suministroSeleccionado = Integer.parseInt(entrada);
+
+            if (suministroSeleccionado == 0) {
+                break;
+            } else if (suministroSeleccionado >= 1 && suministroSeleccionado <= 10) {
+                String suministro = suministrosDisponibles[suministroSeleccionado - 1];
+                boolean yaRecolectado = false;
+
+                for (int i = 0; i < inventarioCount; i++) {
+                    if (inventarioUsuario[i] != null && inventarioUsuario[i].equals(suministro)) {
+                        yaRecolectado = true;
+                        break;
+                    }
+                }
+
+                if (!yaRecolectado) {
+                    inventarioUsuario[inventarioCount] = suministro;
+                    inventarioCount++;
+                    JOptionPane.showMessageDialog(null, suministro + " añadido a tu inventario.");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Ya has recolectado ese suministro.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Número de suministro inválido.");
+            }
+        }
+
+        // Mensaje si se alcanza el máximo de suministros
+        if (inventarioCount == 5) {
+            JOptionPane.showMessageDialog(null, "Has alcanzado el máximo de suministros en tu inventario.");
+        }
+
+        // Mostrar suministros recolectados
+        StringBuilder suministrosRecolectados = new StringBuilder("Suministros recolectados:\n");
+        for (int i = 0; i < inventarioCount; i++) {
+            suministrosRecolectados.append("- ").append(inventarioUsuario[i]).append("\n");
+        }
+        JOptionPane.showMessageDialog(null, suministrosRecolectados.toString());
+
+        // Evaluar la seguridad del refugio
+        boolean esSeguro = false;
+        for (String suministro : inventarioUsuario) {
+            if (suministro != null && suministro.equals(suministroClave)) {
+                esSeguro = true;
+                break;
+            }
+        }
+
+        // Resultados finales
+        String resultado = "El torbellino está a punto de llegar. Es momento de ver si tu refugio y suministros son suficientes.\n";
+        if (esSeguro) {
+            resultado += "¡Has sobrevivido al Torbellino! El refugio resistió. ¡Felicidades, has ganado con el " + suministroClave + "!";
+        } else {
+            resultado += "El refugio no resistió el Torbellino. Te falta " + suministroClave + ". Game Over, camarada.";
+        }
+        JOptionPane.showMessageDialog(null, resultado);
+    }
+}
+
+
+
+
+
+
+
+    
+
